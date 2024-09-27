@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Spendee</string>
+    <string name="welcome_text">Take control of your finances with Spendee!</string>
+    <string name="email_input">Email</string>
+    <string name="password_input">Password</string>
+    <string name="login_button">Login</string>
+    <string name="sign_up_text">Sign Up</string>
+    <string name="sign_up_link">Sign Up Link</string>
+    <string name="login_success_toast">Logged in successfully!</string>
+    <string name="login_fail_toast">Invalid credentials, Please try again!</string>
+</resources>
