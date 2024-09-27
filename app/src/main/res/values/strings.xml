@@ -6,6 +6,8 @@
     <string name="login_button">Login</string>
     <string name="sign_up_text">Sign Up</string>
     <string name="sign_up_link">Sign Up Link</string>
+    <string name="sign_up_context">Don\'t have an account?</string>
     <string name="login_success_toast">Logged in successfully!</string>
     <string name="login_fail_toast">Invalid credentials, Please try again!</string>
+
 </resources>

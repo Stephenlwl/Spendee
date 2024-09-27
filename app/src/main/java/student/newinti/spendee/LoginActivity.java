@@ -19,7 +19,6 @@ public class LoginActivity extends AppCompatActivity {
     //  declare the id variables
     private EditText email_input, password_input;
     private Button login_button;
-    private Text login_success_toast, login_fail_toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
