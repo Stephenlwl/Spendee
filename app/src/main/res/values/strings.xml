@@ -1,13 +1,23 @@
 <resources>
+<!--    Login Section-->
     <string name="app_name">Spendee</string>
     <string name="welcome_text">Take control of your finances with Spendee!</string>
     <string name="email_input">Email</string>
     <string name="password_input">Password</string>
     <string name="login_button">Login</string>
     <string name="sign_up_text">Sign Up</string>
-    <string name="sign_up_link">Sign Up Link</string>
     <string name="sign_up_context">Don\'t have an account?</string>
     <string name="login_success_toast">Logged in successfully!</string>
     <string name="login_fail_toast">Invalid credentials, Please try again!</string>
-
+    <string name="reset_password_text">Forgot password</string>
+    <string name="otp_title">Verifying your email</string>
+    <string name="logo">Spendee Logo</string>
+<!--Sign up section-->
+    <string name="welcome_sign_up_text">Sign Up to Master Your Finances with Spendee</string>
+    <string name="confirm_password_input">Confirm Password</string>
+    <string name="login_context">Already have an account?</string>
+    <string name="login_text">Login</string>
+    <string name="confirm_password_incorrect_toast">Your Password and Confirm Password is Incorrect!</string>
+    <string name="username_input">Username</string>
+    <string name="sign_up_successfully_toast">You have successfully registered!</string>
 </resources>

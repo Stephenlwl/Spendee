@@ -7,18 +7,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
-
+import android.content.Intent;
 import org.w3c.dom.Text;
 
 public class LoginActivity extends AppCompatActivity {
     //  declare the id variables
     private EditText email_input, password_input;
     private Button login_button;
+    private TextView sign_up_link;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
         email_input = findViewById(R.id.email_input);
         password_input = findViewById(R.id.password_input);
         login_button = findViewById(R.id.login_button);
+        sign_up_link = findViewById(R.id.sign_up_link);
 
         login_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,6 +48,14 @@ public class LoginActivity extends AppCompatActivity {
 
         });
 
+        sign_up_link.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                // Navigate to the SignUpActivity
+                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+                startActivity(intent);
+            }
+        });
 
     }
 }

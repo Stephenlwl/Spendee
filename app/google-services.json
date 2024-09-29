@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "753258849499",
+    "project_id": "spendee-dd19f",
+    "storage_bucket": "spendee-dd19f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:753258849499:android:58fdfa87a947dbecbd58fe",
+        "android_client_info": {
+          "package_name": "student.newinti.spendee"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKIEMzdw2EiJT9DSuno2ZoZrwTEOCczZQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
