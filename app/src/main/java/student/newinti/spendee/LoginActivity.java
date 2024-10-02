@@ -3,6 +3,7 @@ package student.newinti.spendee;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -14,6 +15,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Intent;
+
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
 import org.w3c.dom.Text;
 
 public class LoginActivity extends AppCompatActivity {
@@ -40,9 +49,9 @@ public class LoginActivity extends AppCompatActivity {
 
 //            For testing purpose where email and password not empty then able proceed
                 if (!email.isEmpty() && !password.isEmpty()) {
-                    Toast.makeText(LoginActivity.this, R.string.login_success_toast, Toast.LENGTH_SHORT).show();
+                    getUserInDatabase(email, password);
                 } else {
-                    Toast.makeText(LoginActivity.this, R.string.login_fail_toast, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, R.string.login_incomplete_toast, Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -57,5 +66,48 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+    }
+    // get user information in Firebase for validate user account info
+    private void getUserInDatabase(String emailInput, String passwordInput) {
+        // get reference to the Firebase
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://spendee-dd19f-default-rtdb.firebaseio.com/")
+                .getReference("Users");
+
+        // retrieve all users and iterate over them
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                boolean userFound = false;
+
+                //  iterate through all children under the "Users" node
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    // Get the Member object from each snapshot
+                    Member storedUser = snapshot.getValue(Member.class);
+
+
+                    if (storedUser != null) {
+                        // Validate the email and password
+                        if (storedUser.getEmail().equals(emailInput) && storedUser.getPassword().equals(passwordInput)) {
+                            Toast.makeText(LoginActivity.this, R.string.login_success_toast, Toast.LENGTH_SHORT).show();
+
+                            // Navigate to the home screen where label as expense tracking activity
+                            Intent intent = new Intent(LoginActivity.this, ExpenseTrackingActivity.class);
+                            startActivity(intent);
+                            finish();  // finish the login activity
+                        } else {
+                            // credentials don't match
+                            Toast.makeText(LoginActivity.this, R.string.login_fail_toast, Toast.LENGTH_SHORT).show();
+                        }
+                    } else { //user does not exist
+                        Toast.makeText(LoginActivity.this, "User not found", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(LoginActivity.this, "Database error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

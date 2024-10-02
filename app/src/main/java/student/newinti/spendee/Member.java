@@ -4,6 +4,8 @@ public class Member {
     private int userID;
     private String username, email, password;
 
+    public Member(){}
+
     public Member(int id, String username, String email, String password) {
         this.userID = id;
         this.username = username;

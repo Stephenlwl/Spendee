@@ -1,5 +1,5 @@
 <resources>
-<!--    Login Section-->
+    <!--    Login Section-->
     <string name="app_name">Spendee</string>
     <string name="welcome_text">Take control of your finances with Spendee!</string>
     <string name="email_input">Email</string>
@@ -12,7 +12,8 @@
     <string name="reset_password_text">Forgot password</string>
     <string name="otp_title">Verifying your email</string>
     <string name="logo">Spendee Logo</string>
-<!--Sign up section-->
+    <string name="login_incomplete_toast">Email and password fields cannot be left blank.</string>
+    <!--Sign up section-->
     <string name="welcome_sign_up_text">Sign Up to Master Your Finances with Spendee</string>
     <string name="confirm_password_input">Confirm Password</string>
     <string name="login_context">Already have an account?</string>
