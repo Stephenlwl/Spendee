@@ -21,4 +21,12 @@
     <string name="confirm_password_incorrect_toast">Your Password and Confirm Password is Incorrect!</string>
     <string name="username_input">Username</string>
     <string name="sign_up_successfully_toast">You have successfully registered!</string>
+    <!-- Expense tracking section-->
+    <string name="dashboard">Dashboard</string>
+    <string name="logout_label">Logout</string>
+    <string name="daily_spending_title">Daily Spending Records</string>
+    <string name="set_budget_title">Budget Setting</string>
+    <string name="amount">Amount</string>
+    <string name="add_transaction_button">Add Transaction</string>
+    <string name="description_text">Description</string>
 </resources>

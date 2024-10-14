@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="type_array">
+        <item>Select Record Type</item>
+        <item>Income</item>
+        <item>Expense</item>
+    </string-array>
+
+    <string-array name="category_array">
+        <item>Choose Expense Category</item>
+        <item>Food</item>
+        <item>Transportation</item>
+        <item>Entertainment</item>
+        <item>Shopping</item>
+        <item>Billing</item>
+        <item>Others</item>
+    </string-array>
+</resources>

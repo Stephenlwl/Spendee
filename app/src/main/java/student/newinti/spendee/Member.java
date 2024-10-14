@@ -1,20 +1,19 @@
 package student.newinti.spendee;
 
 public class Member {
-    private int userID;
-    private String username, email, password;
+    private String userID, username, email, password;
 
     public Member(){}
 
-    public Member(int id, String username, String email, String password) {
-        this.userID = id;
+    public Member(String userId, String username, String email, String password) {
+        this.userID = userId;
         this.username = username;
         this.email = email;
         this.password = password;
     }
 
     // Getters and setters
-    public int getUserID() {
+    public String getUserID() {
         return userID;
     }
 
@@ -30,7 +29,7 @@ public class Member {
         return password;
     }
 
-    public void setUserID(int userID) {
+    public void setUserID(String userID) {
         this.userID = userID;
     }
 

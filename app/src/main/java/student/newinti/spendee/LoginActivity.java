@@ -78,30 +78,39 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 boolean userFound = false;
-
-                //  iterate through all children under the "Users" node
+                boolean passwordCorrect = false;
+                //  iterate through all children under the users node
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    // Get the Member object from each snapshot
+                    // get the Member object from each snapshot
                     Member storedUser = snapshot.getValue(Member.class);
 
 
                     if (storedUser != null) {
-                        // Validate the email and password
-                        if (storedUser.getEmail().equals(emailInput) && storedUser.getPassword().equals(passwordInput)) {
-                            Toast.makeText(LoginActivity.this, R.string.login_success_toast, Toast.LENGTH_SHORT).show();
 
-                            // Navigate to the home screen where label as expense tracking activity
-                            Intent intent = new Intent(LoginActivity.this, ExpenseTrackingActivity.class);
-                            startActivity(intent);
-                            finish();  // finish the login activity
-                        } else {
-                            // credentials don't match
-                            Toast.makeText(LoginActivity.this, R.string.login_fail_toast, Toast.LENGTH_SHORT).show();
+                        if (storedUser.getEmail().equals(emailInput)) {
+                            userFound = true;
+                            // validate the email and password
+                            if (storedUser.getPassword().equals(passwordInput)) {
+                                passwordCorrect = true; //
+
+                                Toast.makeText(LoginActivity.this, R.string.login_success_toast, Toast.LENGTH_SHORT).show();
+
+                                // navigate to the home screen where label as expense tracking activity
+                                Intent intent = new Intent(LoginActivity.this, ExpenseTrackingActivity.class);
+                                // pass the userID to the next activity
+                                intent.putExtra("UserID", storedUser.getUserID());
+
+                                startActivity(intent);
+                                finish();
+                                break;
+                            }
                         }
-                    } else { //user does not exist
-                        Toast.makeText(LoginActivity.this, "User not found", Toast.LENGTH_SHORT).show();
                     }
-                    break;
+                }
+                if (!userFound) {
+                    Toast.makeText(LoginActivity.this, "User not found", Toast.LENGTH_SHORT).show();
+                } else if (!passwordCorrect) {
+                    Toast.makeText(LoginActivity.this,  R.string.login_fail_toast, Toast.LENGTH_SHORT).show();
                 }
             }
             @Override

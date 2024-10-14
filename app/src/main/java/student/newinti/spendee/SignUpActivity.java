@@ -98,7 +98,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         // Create a Member object to store in the database
         String userId = user.getUid();
-        Member newUser = new Member(userId.hashCode(), username, email, password);
+        Member newUser = new Member(userId, username, email, password);
 
         // store user info based on userid
         databaseReference.child(userId).setValue(newUser)
