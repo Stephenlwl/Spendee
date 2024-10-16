@@ -108,14 +108,14 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 }
                 if (!userFound) {
-                    Toast.makeText(LoginActivity.this, "User not found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, R.string.user_not_found, Toast.LENGTH_SHORT).show();
                 } else if (!passwordCorrect) {
                     Toast.makeText(LoginActivity.this,  R.string.login_fail_toast, Toast.LENGTH_SHORT).show();
                 }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(LoginActivity.this, "Database error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, R.string.database_error + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

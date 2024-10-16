@@ -1,4 +1,5 @@
 <resources>
+
     <!--    Login Section-->
     <string name="app_name">Spendee</string>
     <string name="welcome_text">Take control of your finances with Spendee!</string>
@@ -13,6 +14,9 @@
     <string name="otp_title">Verifying your email</string>
     <string name="logo">Spendee Logo</string>
     <string name="login_incomplete_toast">Email and password fields cannot be left blank.</string>
+    <string name="user_not_found">User not found.</string>
+    <string name="database_error">Database error: </string>
+
     <!--Sign up section-->
     <string name="welcome_sign_up_text">Sign Up to Master Your Finances with Spendee</string>
     <string name="confirm_password_input">Confirm Password</string>
@@ -21,12 +25,42 @@
     <string name="confirm_password_incorrect_toast">Your Password and Confirm Password is Incorrect!</string>
     <string name="username_input">Username</string>
     <string name="sign_up_successfully_toast">You have successfully registered!</string>
+    <string name="verification_sent_success">Verification email sent</string>
+    <string name="verification_sent_fail">Failed to send verification email</string>
+    <string name="registration_fail">Registration failed: </string>
+    <string name="email_exist">Your Email already exists</string>
+    <string name="account_create_successful">Your user account has created successfully</string>
+    <string name="account_create_fail">Failed to create account</string>
+
     <!-- Expense tracking section-->
     <string name="dashboard">Dashboard</string>
     <string name="logout_label">Logout</string>
+    <string name="account_user">Account user: </string>
+    <string name="back_button">back</string>
+    <string name="username">Username</string>
     <string name="daily_spending_title">Daily Spending Records</string>
     <string name="set_budget_title">Budget Setting</string>
     <string name="amount">Amount</string>
-    <string name="add_transaction_button">Add Transaction</string>
+    <string name="add_transaction_button">Add Record</string>
     <string name="description_text">Description</string>
+    <string name="username_not_found">Username not found</string>
+    <string name="invalid_user_id">Invalid user id</string>
+    <string name="transaction_success">Transaction Record added successfully!</string>
+    <string name="transaction_fail">Failed to add transaction.</string>
+    <string name="remaining_budget">Remaining Budget: RM</string>
+    <string name="weekly_income">Weekly Income: RM</string>
+    <string name="weekly_expenses">Weekly Expenses: RM</string>
+    <string name="weekly_summary">Weekly Summary</string>
+    <string name="remain_budget_caution">Warning: Remaining budget is less than 50%!</string>
+    <string name="expense">Expense</string>
+    <string name="category">Category</string>
+    <string name="money">RM0.00</string>
+    <string name="date">Date</string>
+    <string name="create_transaction_button">+ record</string>
+    <!--  Expense tracking validation message  -->
+    <string name="select_record_type">Please select a Record Type</string>
+    <string name="enter_amount">Please enter an amount</string>
+    <string name="enter_valid_amount">Please enter a valid number for the amount</string>
+    <string name="valid_expense_category">Please select a valid expense category</string>
+    <string name="enter_description">Please enter a description</string>
 </resources>

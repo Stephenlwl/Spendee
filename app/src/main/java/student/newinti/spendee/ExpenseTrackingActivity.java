@@ -1,8 +1,10 @@
 package student.newinti.spendee;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.ExpandedMenuView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,6 +30,7 @@ import java.util.Locale;
 
 public class ExpenseTrackingActivity extends AppCompatActivity {
 
+    private Button createRecordButton, logoutButton;
     private TextView username_text_view;
     private TextView budgetRemainingText, warningText, weeklySummary;
     private RecyclerView transactionRecyclerView;
@@ -39,6 +42,10 @@ public class ExpenseTrackingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_expense_tracking);
+
+        // Get userId from Intent
+        String userId = getIntent().getStringExtra("UserID");
+        getUsernameByUserId(userId);
 
         // Initialize views
         budgetRemainingText = findViewById(R.id.budget_remaining_text);
@@ -52,98 +59,29 @@ public class ExpenseTrackingActivity extends AppCompatActivity {
         transactionRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         transactionRecyclerView.setAdapter(transactionAdapter);
 
-        // Get userId from Intent
-        String userId = getIntent().getStringExtra("UserID");
-        getUsernameByUserId(userId);
         // shows the user account name
         username_text_view = findViewById(R.id.username_text_view);
-
         getTransactions(userId);
-        // display the type and category selection
-        Spinner typeSpinner = findViewById(R.id.type_spinner);
-        Spinner categorySpinner = findViewById(R.id.category_spinner);
 
-        // hide expense category at initial
-        categorySpinner.setVisibility(View.GONE);
+        createRecordButton = findViewById(R.id.create_transaction_record_button);
+        logoutButton = findViewById(R.id.logout_button);
 
-        // handle record type selection
-        typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        createRecordButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                String selectedType = typeSpinner.getSelectedItem().toString();
-                checkRecordType(selectedType);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
+            public void onClick(View view) {
+                Intent intent = new Intent(ExpenseTrackingActivity.this, AddRecordActivity.class);
+                intent.putExtra("UserID", userId);
+                startActivity(intent);
             }
         });
 
-        EditText amountInput = findViewById(R.id.amount_input);
-        EditText descriptionInput = findViewById(R.id.description_input);
-        Button addTransactionButton = findViewById(R.id.add_transaction_button);
-
-        addTransactionButton.setOnClickListener(v -> {
-            String type = typeSpinner.getSelectedItem().toString();
-            String category = categorySpinner.getSelectedItem().toString();
-            String amountText = amountInput.getText().toString().trim(); // Get amount in text input
-            double amount = 0.00;
-            String description = descriptionInput.getText().toString();
-
-            // return null if type is income else return the selected category
-            category = checkRecordsType(type, category);
-            // Validate type selection
-            if (type.isEmpty()) {
-                Toast.makeText(ExpenseTrackingActivity.this, "Please select a Record Type", Toast.LENGTH_SHORT).show();
-                return;
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ExpenseTrackingActivity.this, LoginActivity.class);
+                startActivity(intent);
             }
-
-            // Validate amount input
-            if (amountText.isEmpty()) {
-                Toast.makeText(ExpenseTrackingActivity.this, "Please enter an amount", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            try {
-                amount = Double.parseDouble(amountText);
-            } catch (NumberFormatException e) {
-                Toast.makeText(ExpenseTrackingActivity.this, "Please enter a valid number for the amount", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            // Validate category if the type is Expense
-            category = checkRecordsType(type, category);
-            if (type.equals("Expense")) {
-                if (category.equals("Choose Expense Category")) {
-                    Toast.makeText(ExpenseTrackingActivity.this, "Please select a valid expense category", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-            }
-
-            // Validate description
-            if (description.isEmpty()) {
-                Toast.makeText(ExpenseTrackingActivity.this, "Please enter a description", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-
-            // add transaction/expenses record in firebase
-            addTransaction(type, category, amount, description, date, userId);
-
         });
-    }
-
-    private String checkRecordsType(String type, String category) {
-
-        if (type.equals("Expense")) {
-            return category;
-        } else if (type.equals("Income")) {
-            return null;
-        } else {
-            Toast.makeText(ExpenseTrackingActivity.this, "Please select the Record Type", Toast.LENGTH_SHORT).show();
-            return null;
-        }
     }
 
     private void getUsernameByUserId(String userId) {
@@ -161,48 +99,21 @@ public class ExpenseTrackingActivity extends AppCompatActivity {
                             username_text_view.setText(username);
                             System.out.println("username: " + username);
                         } else {
-                            Toast.makeText(ExpenseTrackingActivity.this, "Username not found", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ExpenseTrackingActivity.this, R.string.username_not_found, Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(ExpenseTrackingActivity.this, "User not found", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ExpenseTrackingActivity.this, R.string.user_not_found, Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                    Toast.makeText(ExpenseTrackingActivity.this, "Error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ExpenseTrackingActivity.this, R.string.database_error + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
-            Toast.makeText(ExpenseTrackingActivity.this, "Invalid UserID", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ExpenseTrackingActivity.this, R.string.invalid_user_id, Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private void checkRecordType(String type){
-        Spinner categorySpinner = findViewById(R.id.category_spinner);
-        if (type.equals("Income")) {
-            categorySpinner.setVisibility(View.GONE);
-        } else if (type.equals("Expense")) {
-            categorySpinner.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void addTransaction(String type, String category, double amount, String description, String date, String userId) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://spendee-dd19f-default-rtdb.firebaseio.com/")
-                .getReference("Transactions");
-
-        // Create transaction id as pk
-        String transactionId = databaseReference.push().getKey();
-        Transaction transaction = new Transaction(transactionId, userId, type, category, amount, description, date);
-        databaseReference.child(transaction.getTransactionId()).setValue(transaction)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(ExpenseTrackingActivity.this, "Transaction added successfully!", Toast.LENGTH_SHORT).show();
-
-                    } else {
-                        Toast.makeText(ExpenseTrackingActivity.this, "Failed to add transaction.", Toast.LENGTH_SHORT).show();
-                    }
-                });
     }
 
     private void getTransactions(String userId) {
@@ -241,7 +152,7 @@ public class ExpenseTrackingActivity extends AppCompatActivity {
 
     private void updateSummary() {
         double remainingBudget = totalIncome - totalExpenses;
-        budgetRemainingText.setText(String.format(Locale.getDefault(), "Remaining Budget: RM%.2f", remainingBudget));
+        budgetRemainingText.setText(String.format(Locale.getDefault(), getString(R.string.remaining_budget) + "%.2f", remainingBudget));
 
         if (remainingBudget <= (totalIncome * 0.50)) {
             warningText.setVisibility(View.VISIBLE);
@@ -250,7 +161,7 @@ public class ExpenseTrackingActivity extends AppCompatActivity {
         }
 
         // set up weekly summary details under this section
-        weeklySummary.setText(String.format(Locale.getDefault(), "Weekly Income: RM%.2f\nWeekly Expenses: RM%.2f",
+        weeklySummary.setText(String.format(Locale.getDefault(), getString(R.string.weekly_income)  + "%.2f\n" + getString(R.string.weekly_expenses) + "%.2f",
                 totalIncome, totalExpenses));
     }
 }

@@ -72,17 +72,17 @@ public class SignUpActivity extends AppCompatActivity {
                             user.sendEmailVerification()
                                     .addOnCompleteListener(emailTask -> {
                                         if (emailTask.isSuccessful()) {
-                                            Toast.makeText(SignUpActivity.this, "Verification email sent", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(SignUpActivity.this, R.string.verification_sent_success, Toast.LENGTH_SHORT).show();
                                             storeUserInDatabase(user, email, username, password);
                                         } else {
-                                            Toast.makeText(SignUpActivity.this, "Failed to send verification email", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(SignUpActivity.this, R.string.verification_sent_fail, Toast.LENGTH_SHORT).show();
                                         }
                                     });
                         }
                     } else {
-                        String errorMessage = "Registration failed: " + task.getException().getMessage();
+                        String errorMessage = R.string.registration_fail + task.getException().getMessage();
                         if (task.getException() instanceof FirebaseAuthUserCollisionException) {
-                            Toast.makeText(SignUpActivity.this, "Your Email already exists", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignUpActivity.this, R.string.email_exist, Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(SignUpActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
                         }
@@ -104,11 +104,11 @@ public class SignUpActivity extends AppCompatActivity {
         databaseReference.child(userId).setValue(newUser)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Toast.makeText(SignUpActivity.this, "Your User account has created successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SignUpActivity.this, R.string.account_create_successful, Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
                         startActivity(intent);
                     } else {
-                        Toast.makeText(SignUpActivity.this, "Failed to create account", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SignUpActivity.this, R.string.account_create_fail, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
