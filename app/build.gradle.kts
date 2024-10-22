@@ -44,6 +44,10 @@ dependencies {
     
     // Add CardView dependency
     implementation("androidx.cardview:cardview:1.0.0")
+    // Add Pie Chart for Spending Categories
+    implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    // Use for hashing password
+    implementation ("org.mindrot:jbcrypt:0.4")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

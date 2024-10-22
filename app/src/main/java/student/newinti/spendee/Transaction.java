@@ -1,9 +1,13 @@
 package student.newinti.spendee;
 
+import java.util.Date;
+
 public class Transaction {
 
     private String transactionId, userId, type, category, description, date; // type=food or transportation or entertainment or others
     private double amount;
+    private boolean isRecurring;
+    private String recurrenceInterval; // "Weekly", "Monthly"
 
 //    required for firebase
     public Transaction() {}
@@ -44,6 +48,14 @@ public class Transaction {
         return date;
     }
 
+    public boolean isRecurring() {
+        return isRecurring;
+    }
+
+    public String getRecurrenceInterval() {
+        return recurrenceInterval;
+    }
+
     public void setTransactionId(String transactionId) {
         this.transactionId = transactionId;
     }
@@ -68,6 +80,14 @@ public class Transaction {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public void setRecurring(boolean recurring) {
+        isRecurring = recurring;
+    }
+
+    public void setRecurrenceInterval(String recurrenceInterval) {
+        this.recurrenceInterval = recurrenceInterval;
     }
 }
 

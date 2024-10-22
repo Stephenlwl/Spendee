@@ -1,10 +1,14 @@
 package student.newinti.spendee;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.ExpandedMenuView;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,27 +20,46 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Calendar;
+import java.util.Map;
+
+import com.github.mikephil.charting.charts.PieChart;
 
 public class ExpenseTrackingActivity extends AppCompatActivity {
 
-    private Button createRecordButton, logoutButton;
+    private Button createRecordButton, logoutButton, saveButton;
     private TextView username_text_view;
-    private TextView budgetRemainingText, warningText, weeklySummary;
+    private TextView budgetRemainingText, warningText, monthlySummary;
     private RecyclerView transactionRecyclerView;
     private TransactionAdapter transactionAdapter;
     private List<Transaction> transactionsList = new ArrayList<>();
-    private double totalExpenses = 0, totalIncome = 0;
+    private double totalExpenses = 0, totalBudget = 0, totalIncome = 0;
+    private PieChart pieChart;
+    // provide difference color for each expenses category
+    private int[] pastelColors = {
+            0xFFD3C1E3, // Pastel Lavender
+            0xFFB2E3D4, // Pastel Mint
+            0xFFFFCBA4, // Pastel Peach
+            0xFFEAB8E4, // Pastel Lilac
+            0xFF9DD6E1, // Pastel Sky Blue
+            0xFFFF6F61 // Pastel Coral
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +73,9 @@ public class ExpenseTrackingActivity extends AppCompatActivity {
         // Initialize views
         budgetRemainingText = findViewById(R.id.budget_remaining_text);
         warningText = findViewById(R.id.warning_text);
-        weeklySummary = findViewById(R.id.weekly_summary);
+        monthlySummary = findViewById(R.id.monthly_summary);
         transactionRecyclerView = findViewById(R.id.transaction_recycler_view);
+        pieChart = findViewById(R.id.pie_chart);
 
         // Setup RecyclerView
         transactionAdapter = new TransactionAdapter(transactionsList);
@@ -61,10 +85,65 @@ public class ExpenseTrackingActivity extends AppCompatActivity {
 
         // shows the user account name
         username_text_view = findViewById(R.id.username_text_view);
-        getTransactions(userId);
-
+        saveButton = findViewById(R.id.set_budget_button);
         createRecordButton = findViewById(R.id.create_transaction_record_button);
         logoutButton = findViewById(R.id.logout_button);
+
+        getTransactions(userId);
+        getBudget(userId);
+        updatePieChart();
+
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditText budgetText = findViewById(R.id.set_budget_text);
+                String budgetTextString = budgetText.getText().toString().trim();
+
+                if (budgetTextString.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "Please enter a budget value", Toast.LENGTH_SHORT).show();
+                    return;  // Stop execution
+                }
+
+                // parse budget amount to double
+                double budgetAmount;
+                try {
+                    budgetAmount = Double.parseDouble(budgetTextString);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    Toast.makeText(ExpenseTrackingActivity.this, "Invalid input for budget amount", Toast.LENGTH_SHORT).show();
+                    return;  // Stop execution
+                }
+
+                // check if the budget value is valid
+                if (budgetAmount <= 0) {
+                    Toast.makeText(getApplicationContext(), "Please enter a valid budget value greater than 0", Toast.LENGTH_SHORT).show();
+                    return;  // Stop execution
+                }
+
+                // reference to fire db
+                DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://spendee-dd19f-default-rtdb.firebaseio.com/")
+                        .getReference("Budget").child(userId);
+
+                // update or insert the budget amount in fire db
+                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        databaseReference.child("budgetAmount").setValue(budgetAmount);
+
+                        getBudget(userId);
+                        updateSummary();
+                        Toast.makeText(getApplicationContext(), "Budget saved successfully", Toast.LENGTH_SHORT).show();
+                        clearInputFields(budgetText);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        // handle possible errors
+                        Toast.makeText(getApplicationContext(), "Failed to save budget", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
 
         createRecordButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,15 +210,21 @@ public class ExpenseTrackingActivity extends AppCompatActivity {
                     Transaction transaction = snapshot.getValue(Transaction.class);
 
                     if (transaction != null) {
-                        transactionsList.add(transaction);
-                        if (transaction.getType().equals("Expense")) {
-                            totalExpenses += transaction.getAmount();
-                        } else {
-                            totalIncome += transaction.getAmount();
+                        // filter transaction record to include only those from the current month and year
+                        if (isTransactionFromCurrentMonth(transaction)) {
+                            transactionsList.add(transaction);
+                            if (transaction.getType().equals("Expense")) {
+                                totalExpenses += transaction.getAmount();
+                            } else if (transaction.getType().equals("Income")) {
+                                totalIncome += transaction.getAmount();
+                            } else {
+                                totalBudget += transaction.getAmount();
+                            }
                         }
                     }
                 }
                 transactionAdapter.notifyDataSetChanged();
+                updatePieChart();
                 updateSummary();
             }
 
@@ -150,18 +235,111 @@ public class ExpenseTrackingActivity extends AppCompatActivity {
         });
     }
 
+    private void getBudget(String userId) {
+        // Reference to the specific user's node under "Budget"
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://spendee-dd19f-default-rtdb.firebaseio.com/")
+                .getReference("Budget").child(userId);
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                totalBudget = 0;
+
+                Budget budget = dataSnapshot.getValue(Budget.class);
+
+                if (budget != null) {
+                    totalBudget = budget.getBudgetAmount();
+                }
+
+                updatePieChart();
+                updateSummary();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Handle errors
+                Toast.makeText(ExpenseTrackingActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+    private boolean isTransactionFromCurrentMonth(Transaction transaction) {
+        Calendar calendar = Calendar.getInstance();
+        int currentMonth = calendar.get(Calendar.MONTH);
+        int currentYear = calendar.get(Calendar.YEAR);
+
+        String dateString = transaction.getDate();
+        try {
+            Date date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(dateString);
+            Calendar transactionCalendar = Calendar.getInstance();
+            transactionCalendar.setTime(date);
+
+            int transactionMonth = transactionCalendar.get(Calendar.MONTH);
+            int transactionYear = transactionCalendar.get(Calendar.YEAR);
+
+            // return true if the transaction record is from the current month and year
+            return transactionMonth == currentMonth && transactionYear == currentYear;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false; // skip this record if date not same as current month and year
+        }
+    }
+
     private void updateSummary() {
-        double remainingBudget = totalIncome - totalExpenses;
+        double remainingBudget = totalBudget - totalExpenses;
         budgetRemainingText.setText(String.format(Locale.getDefault(), getString(R.string.remaining_budget) + "%.2f", remainingBudget));
 
-        if (remainingBudget <= (totalIncome * 0.50)) {
+        if (remainingBudget <= (totalBudget * 0.50)) {
             warningText.setVisibility(View.VISIBLE);
         } else {
             warningText.setVisibility(View.GONE);
         }
 
-        // set up weekly summary details under this section
-        weeklySummary.setText(String.format(Locale.getDefault(), getString(R.string.weekly_income)  + "%.2f\n" + getString(R.string.weekly_expenses) + "%.2f",
-                totalIncome, totalExpenses));
+        // set up monthly summary details under this section
+        monthlySummary.setText(String.format(Locale.getDefault(), getString(R.string.monthly_income) + "%.2f\n" + getString(R.string.monthly_expenses) + "%.2f\n" + getString(R.string.monthly_budget) + "%.2f",
+                totalIncome, totalExpenses, totalBudget));
     }
+
+    private void updatePieChart() {
+        Map<String, Double> categoryExpenses = new HashMap<>();
+        for (Transaction transaction : transactionsList) {
+            if (transaction.getType().equals("Expense")) {
+                String category = transaction.getCategory();
+                double amount = transaction.getAmount();
+                categoryExpenses.put(category, categoryExpenses.getOrDefault(category, 0.0) + amount);
+            }
+        }
+
+        List<PieEntry> entries = new ArrayList<>();
+        for (Map.Entry<String, Double> entry : categoryExpenses.entrySet()) {
+            entries.add(new PieEntry(entry.getValue().floatValue(), entry.getKey()));
+        }
+
+        pieChart.setDrawEntryLabels(false); // disable the category label on the chart
+
+        // get the budget amount and set it as a separate entry
+        double budgetAmount = totalBudget - totalExpenses;
+        entries.add(new PieEntry((float) budgetAmount, "Budget Remain"));
+
+        PieDataSet dataSet = new PieDataSet(entries, "Expenses by Category");
+        List<Integer> colors = new ArrayList<>();
+        for (int i = 0; i < entries.size(); i++) {
+            if (i == entries.size() - 1) { // last entry for budget
+                colors.add(0xFFFFA500); // Orange for budget
+            } else {
+                colors.add(pastelColors[i % pastelColors.length]); // Cycle through pastel colors
+            }
+        }
+
+        dataSet.setColors(colors);
+        PieData data = new PieData(dataSet);
+        pieChart.setData(data);
+        pieChart.invalidate(); // refresh
+    }
+
+    private void clearInputFields(EditText budgetAmountInput) {
+        budgetAmountInput.setText("");
+    }
+
 }

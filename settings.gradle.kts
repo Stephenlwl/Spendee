@@ -16,6 +16,8 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        // Add Pie Chart for Spending Categories
+        maven { url = uri("https://jitpack.io") }
     }
 }
 

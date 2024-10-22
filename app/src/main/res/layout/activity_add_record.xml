@@ -8,55 +8,60 @@
     android:background="#FFF4EA"
     tools:context=".AddRecordActivity">
 
+    <!-- Title -->
     <TextView
         android:id="@+id/daily_spending_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="20dp"
-        android:text="@string/daily_spending_title"
+        android:layout_marginTop="24dp"
+        android:text="@string/record_title"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/type_spinner"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Back Button -->
     <Button
         android:id="@+id/back_button"
-        android:layout_width="86dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:backgroundTint="@color/teal_700"
         android:text="@string/back_button"
-        android:textAllCaps="true"
-        android:textColorHint="@color/white"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:drawableEnd="@drawable/arrow_back"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.076"
+        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/daily_spending_title" />
 
+    <!-- Type Dropdown -->
     <Spinner
         android:id="@+id/type_spinner"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="96dp"
-        android:layout_marginRight="25dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:hint="@string/select_record_type"
         android:background="@drawable/dropdown_background"
         android:entries="@array/type_array"
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/daily_spending_title" />
+        app:layout_constraintTop_toBottomOf="@id/back_button" />
 
+    <!-- Category Dropdown -->
     <Spinner
         android:id="@+id/category_spinner"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="25dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:hint="@string/valid_expense_category"
         android:background="@drawable/dropdown_background"
         android:entries="@array/category_array"
         android:minHeight="48dp"
@@ -64,43 +69,48 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/type_spinner" />
 
+    <!-- Amount Input -->
     <EditText
         android:id="@+id/amount_input"
-        android:layout_width="300dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
         android:background="@drawable/record_input"
         android:hint="@string/amount"
         android:inputType="numberDecimal"
-        android:minHeight="48dp"
         android:padding="15dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.225"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/category_spinner" />
 
+    <!-- Description Input -->
     <EditText
         android:id="@+id/description_input"
-        android:layout_width="300dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
         android:background="@drawable/record_input"
         android:hint="@string/description_text"
-        android:minHeight="48dp"
         android:padding="15dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.225"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/amount_input" />
 
+    <!-- Add Transaction Button -->
     <Button
         android:id="@+id/add_transaction_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="24dp"
         android:text="@string/add_transaction_button"
+        android:textSize="16sp"
+        android:backgroundTint="@color/teal_700"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/description_input" />
 

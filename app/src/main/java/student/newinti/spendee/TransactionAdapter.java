@@ -6,16 +6,27 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Collections;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.stream.Collectors;
 
 public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder> {
 
     private List<Transaction> transactionList;
     // retrieve and store the transaction record in transaction list
     public TransactionAdapter(List<Transaction> transactionList) {
-        Collections.reverse(transactionList);
+
+        Collections.sort(transactionList, new Comparator<Transaction>() {
+            @Override
+            public int compare(Transaction t1, Transaction t2) {
+                return t1.getDate().compareTo(t2.getDate()); // sort records in descending
+            }
+        });
         this.transactionList = transactionList;
     }
 

@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Intent;
+import android.widget.CheckBox;
 
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -22,14 +23,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-
-import org.w3c.dom.Text;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class LoginActivity extends AppCompatActivity {
     //  declare the id variables
     private EditText email_input, password_input;
     private Button login_button;
     private TextView sign_up_link;
+    private CheckBox showPasswordCheckbox;
+    private android.text.InputType InputType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,17 @@ public class LoginActivity extends AppCompatActivity {
         password_input = findViewById(R.id.password_input);
         login_button = findViewById(R.id.login_button);
         sign_up_link = findViewById(R.id.sign_up_link);
+        showPasswordCheckbox = findViewById(R.id.show_password_checkbox);
+
+        showPasswordCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                password_input.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+            } else {
+                password_input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            }
+            // Move cursor to the end of the input field
+            password_input.setSelection(password_input.getText().length());
+        });
 
         login_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,7 +60,6 @@ public class LoginActivity extends AppCompatActivity {
                 String email = email_input.getText().toString().trim();
                 String password = password_input.getText().toString().trim();
 
-//            For testing purpose where email and password not empty then able proceed
                 if (!email.isEmpty() && !password.isEmpty()) {
                     getUserInDatabase(email, password);
                 } else {
@@ -67,6 +79,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
     }
+
     // get user information in Firebase for validate user account info
     private void getUserInDatabase(String emailInput, String passwordInput) {
         // get reference to the Firebase
@@ -84,22 +97,16 @@ public class LoginActivity extends AppCompatActivity {
                     // get the Member object from each snapshot
                     Member storedUser = snapshot.getValue(Member.class);
 
-
                     if (storedUser != null) {
 
                         if (storedUser.getEmail().equals(emailInput)) {
                             userFound = true;
-                            // validate the email and password
-                            if (storedUser.getPassword().equals(passwordInput)) {
-                                passwordCorrect = true; //
-
+                            // Validate the email and password using bcrypt
+                            if (BCrypt.checkpw(passwordInput, storedUser.getPassword())) {
+                                passwordCorrect = true;
                                 Toast.makeText(LoginActivity.this, R.string.login_success_toast, Toast.LENGTH_SHORT).show();
-
-                                // navigate to the home screen where label as expense tracking activity
                                 Intent intent = new Intent(LoginActivity.this, ExpenseTrackingActivity.class);
-                                // pass the userID to the next activity
                                 intent.putExtra("UserID", storedUser.getUserID());
-
                                 startActivity(intent);
                                 finish();
                                 break;

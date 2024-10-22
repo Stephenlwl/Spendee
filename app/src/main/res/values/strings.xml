@@ -31,6 +31,9 @@
     <string name="email_exist">Your Email already exists</string>
     <string name="account_create_successful">Your user account has created successfully</string>
     <string name="account_create_fail">Failed to create account</string>
+    <string name="password_requirement">*Password must be at least 6 characters long, include a number and a symbol.</string>
+    <string name="show_password">show password</string>
+    <string name="password_requirements_not_met">Your Password is not met with our system requirements!</string>
 
     <!-- Expense tracking section-->
     <string name="dashboard">Dashboard</string>
@@ -38,7 +41,7 @@
     <string name="account_user">Account user: </string>
     <string name="back_button">back</string>
     <string name="username">Username</string>
-    <string name="daily_spending_title">Daily Spending Records</string>
+    <string name="record_title">Spending &amp; Income Records</string>
     <string name="set_budget_title">Budget Setting</string>
     <string name="amount">Amount</string>
     <string name="add_transaction_button">Add Record</string>
@@ -48,19 +51,25 @@
     <string name="transaction_success">Transaction Record added successfully!</string>
     <string name="transaction_fail">Failed to add transaction.</string>
     <string name="remaining_budget">Remaining Budget: RM</string>
-    <string name="weekly_income">Weekly Income: RM</string>
-    <string name="weekly_expenses">Weekly Expenses: RM</string>
-    <string name="weekly_summary">Weekly Summary</string>
+    <string name="monthly_budget">Monthly Budget: RM</string>
+    <string name="monthly_expenses">Monthly Expenses: RM</string>
+    <string name="monthly_income">Monthly Income: RM</string>
+    <string name="monthly_summary">Monthly Summary</string>
     <string name="remain_budget_caution">Warning: Remaining budget is less than 50%!</string>
     <string name="expense">Expense</string>
     <string name="category">Category</string>
     <string name="money">RM0.00</string>
     <string name="date">Date</string>
     <string name="create_transaction_button">+ record</string>
+    <string name="set_budget_button">Save</string>
+    <string name="set_budget_text">Set your monthly budget here!</string>
+    <string name="records_history">Records History</string>
+
     <!--  Expense tracking validation message  -->
     <string name="select_record_type">Please select a Record Type</string>
     <string name="enter_amount">Please enter an amount</string>
     <string name="enter_valid_amount">Please enter a valid number for the amount</string>
     <string name="valid_expense_category">Please select a valid expense category</string>
     <string name="enter_description">Please enter a description</string>
+
 </resources>
