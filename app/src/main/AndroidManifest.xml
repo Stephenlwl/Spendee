@@ -15,6 +15,9 @@
         android:theme="@style/Theme.Spendee"
         tools:targetApi="31">
         <activity
+            android:name=".BudgetSettingActivity"
+            android:exported="false" />
+        <activity
             android:name=".NewPasswordActivity"
             android:exported="false" />
         <activity

@@ -51,11 +51,11 @@
     <string name="transaction_success">Transaction Record added successfully!</string>
     <string name="transaction_fail">Failed to add transaction.</string>
     <string name="remaining_budget">Remaining Budget: RM</string>
-    <string name="monthly_budget">Monthly Budget: RM</string>
-    <string name="monthly_expenses">Monthly Expenses: RM</string>
-    <string name="monthly_income">Monthly Income: RM</string>
+    <string name="monthly_budget">Monthly Budget: </string>
+    <string name="monthly_expenses">Monthly Expenses: </string>
+    <string name="monthly_income">Monthly Income: </string>
     <string name="monthly_summary">Monthly Summary</string>
-    <string name="remain_budget_caution">Warning: Remaining budget is less than 50%!</string>
+    <string name="remain_budget_caution">*Attention: Your remaining budget is nearing its limit! !</string>
     <string name="expense">Expense</string>
     <string name="category">Category</string>
     <string name="money">RM0.00</string>
@@ -64,6 +64,7 @@
     <string name="set_budget_button">Save</string>
     <string name="set_budget_text">Set your monthly budget here!</string>
     <string name="records_history">Records History</string>
+    <string name="set_low_budget_alert_button">Set Low-Budget Limit Warning</string>
 
     <!--  Expense tracking validation message  -->
     <string name="select_record_type">Please select a Record Type</string>
@@ -72,4 +73,14 @@
     <string name="valid_expense_category">Please select a valid expense category</string>
     <string name="enter_description">Please enter a description</string>
 
+    <!--    budget alert setting-->
+    <string name="set_low_budget_text">Stay on Track with Spendee\'s Low Budget Warning</string>
+    <string name="set_low_budget_alert_text">Set the Amount for Low Budget Alert</string>
+    <string name="set_alert_button">Save Alert</string>
+    <string name="budget_alert_img">Budget Alert Image</string>
+    <string name="invalid_budget_alert_less_than_budget_message">Please enter a valid alert amount greater than 0 and less than the set budget.</string>
+    <string name="invalid_budget_alert_input">Invalid input for budget alert amount"</string>
+    <string name="invalid_budget_amount_input">Please enter a valid budget alert amount</string>
+    <string name="alert_budget_set_successful">Budget alert set successfully</string>
+    <string name="alert_budget_set_failed">Failed to set budget alert</string>
 </resources>

@@ -43,13 +43,13 @@ import com.github.mikephil.charting.charts.PieChart;
 
 public class ExpenseTrackingActivity extends AppCompatActivity {
 
-    private Button createRecordButton, logoutButton, saveButton;
+    private Button createRecordButton, logoutButton, saveButton, setLowBudgetAlertButton;
     private TextView username_text_view;
-    private TextView budgetRemainingText, warningText, monthlySummary;
+    private TextView budgetRemainingText, warningText, monthlyIncome, monthlyExpenses, monthlyBudget;
     private RecyclerView transactionRecyclerView;
     private TransactionAdapter transactionAdapter;
     private List<Transaction> transactionsList = new ArrayList<>();
-    private double totalExpenses = 0, totalBudget = 0, totalIncome = 0;
+    private double totalExpenses = 0, totalBudget = 0, totalIncome = 0, budgetAmount = 0;
     private PieChart pieChart;
     // provide difference color for each expenses category
     private int[] pastelColors = {
@@ -72,8 +72,10 @@ public class ExpenseTrackingActivity extends AppCompatActivity {
 
         // Initialize views
         budgetRemainingText = findViewById(R.id.budget_remaining_text);
-        warningText = findViewById(R.id.warning_text);
-        monthlySummary = findViewById(R.id.monthly_summary);
+        warningText = findViewById(R.id.low_budget_alert_warning_text);
+        monthlyExpenses = findViewById(R.id.monthly_expenses_value);
+        monthlyIncome = findViewById(R.id.monthly_income_value);
+        monthlyBudget = findViewById(R.id.monthly_budget_value);
         transactionRecyclerView = findViewById(R.id.transaction_recycler_view);
         pieChart = findViewById(R.id.pie_chart);
 
@@ -87,6 +89,7 @@ public class ExpenseTrackingActivity extends AppCompatActivity {
         username_text_view = findViewById(R.id.username_text_view);
         saveButton = findViewById(R.id.set_budget_button);
         createRecordButton = findViewById(R.id.create_transaction_record_button);
+        setLowBudgetAlertButton = findViewById(R.id.set_low_budget_alert_button);
         logoutButton = findViewById(R.id.logout_button);
 
         getTransactions(userId);
@@ -105,7 +108,6 @@ public class ExpenseTrackingActivity extends AppCompatActivity {
                 }
 
                 // parse budget amount to double
-                double budgetAmount;
                 try {
                     budgetAmount = Double.parseDouble(budgetTextString);
                 } catch (NumberFormatException e) {
@@ -131,7 +133,7 @@ public class ExpenseTrackingActivity extends AppCompatActivity {
                         databaseReference.child("budgetAmount").setValue(budgetAmount);
 
                         getBudget(userId);
-                        updateSummary();
+                        updateSummary(userId);
                         Toast.makeText(getApplicationContext(), "Budget saved successfully", Toast.LENGTH_SHORT).show();
                         clearInputFields(budgetText);
                     }
@@ -150,6 +152,16 @@ public class ExpenseTrackingActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(ExpenseTrackingActivity.this, AddRecordActivity.class);
                 intent.putExtra("UserID", userId);
+                startActivity(intent);
+            }
+        });
+
+        setLowBudgetAlertButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ExpenseTrackingActivity.this, BudgetSettingActivity.class);
+                intent.putExtra("UserID", userId);
+                intent.putExtra("BudgetAmount", totalBudget);
                 startActivity(intent);
             }
         });
@@ -225,7 +237,7 @@ public class ExpenseTrackingActivity extends AppCompatActivity {
                 }
                 transactionAdapter.notifyDataSetChanged();
                 updatePieChart();
-                updateSummary();
+                updateSummary(userId);
             }
 
             @Override
@@ -252,7 +264,7 @@ public class ExpenseTrackingActivity extends AppCompatActivity {
                 }
 
                 updatePieChart();
-                updateSummary();
+                updateSummary(userId);
             }
 
             @Override
@@ -286,19 +298,55 @@ public class ExpenseTrackingActivity extends AppCompatActivity {
         }
     }
 
-    private void updateSummary() {
-        double remainingBudget = totalBudget - totalExpenses;
-        budgetRemainingText.setText(String.format(Locale.getDefault(), getString(R.string.remaining_budget) + "%.2f", remainingBudget));
+    private void updateSummary(String userId) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://spendee-dd19f-default-rtdb.firebaseio.com/")
+                .getReference("Budget").child(userId);
 
-        if (remainingBudget <= (totalBudget * 0.50)) {
-            warningText.setVisibility(View.VISIBLE);
-        } else {
-            warningText.setVisibility(View.GONE);
-        }
+        // Fetch the budget, expenses, and alert threshold from Firebase
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // Get budget and alert threshold, checking for null values
+                    Double budgetAmount = dataSnapshot.child("budgetAmount").getValue(Double.class);
+                    Double lowAmountBudgetAlert = dataSnapshot.child("lowAmountBudgetAlert").getValue(Double.class);
 
-        // set up monthly summary details under this section
-        monthlySummary.setText(String.format(Locale.getDefault(), getString(R.string.monthly_income) + "%.2f\n" + getString(R.string.monthly_expenses) + "%.2f\n" + getString(R.string.monthly_budget) + "%.2f",
-                totalIncome, totalExpenses, totalBudget));
+                    // If budgetAmount or lowAmountBudgetAlert is null, handle it accordingly
+                    if (budgetAmount == null) {
+                        budgetAmount = 0.0; // Default value or handle error
+                    }
+                    if (lowAmountBudgetAlert == null) {
+                        lowAmountBudgetAlert = 0.0; // Default value or handle error
+                    }
+
+                    totalBudget = budgetAmount;
+                    monthlyExpenses.setText(String.format(Locale.getDefault(), "RM " + "%.2f", totalExpenses));
+                    monthlyIncome.setText(String.format(Locale.getDefault(), "RM " + "%.2f", totalIncome));
+                    monthlyBudget.setText(String.format(Locale.getDefault(), "RM " + "%.2f", totalBudget));
+
+                    double remainingBudget = totalBudget - totalExpenses;
+
+                    // Update UI with remaining budget
+                    budgetRemainingText.setText(String.format(Locale.getDefault(), getString(R.string.remaining_budget) + " %.2f", remainingBudget));
+
+                    // Display warning text if remaining budget is below the alert threshold
+                    if (remainingBudget <= lowAmountBudgetAlert) {
+                        warningText.setVisibility(View.VISIBLE);
+                    } else {
+                        warningText.setVisibility(View.GONE);
+                    }
+                } else {
+                    // Handle case where the snapshot does not exist
+                    Toast.makeText(ExpenseTrackingActivity.this, "Budget data not found", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Handle errors
+                Toast.makeText(ExpenseTrackingActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void updatePieChart() {
@@ -337,7 +385,7 @@ public class ExpenseTrackingActivity extends AppCompatActivity {
         pieChart.setData(data);
         pieChart.invalidate(); // refresh
     }
-
+    // for the budget setting input
     private void clearInputFields(EditText budgetAmountInput) {
         budgetAmountInput.setText("");
     }
