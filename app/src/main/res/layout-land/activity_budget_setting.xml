@@ -42,7 +42,7 @@
             app:layout_constraintHorizontal_bias="0.1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/set_low_budget_text" />
-
+            
         <ImageView
             android:id="@+id/budget_alert_img"
             android:layout_width="269dp"
@@ -73,10 +73,10 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/budget_alert_img" />
 
-        <!-- Login Button -->
+        <!-- save Button -->
         <Button
             android:id="@+id/set_alert_button"
-            android:layout_width="0dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"

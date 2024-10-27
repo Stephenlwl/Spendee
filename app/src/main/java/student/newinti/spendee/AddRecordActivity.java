@@ -154,6 +154,9 @@ public class AddRecordActivity extends AppCompatActivity {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://spendee-dd19f-default-rtdb.firebaseio.com/")
                 .getReference("Transactions");
 
+        if (category.equals("Choose Expense Category")) {
+            category = null;
+        }
         // Create transaction id as pk
         String transactionId = databaseReference.push().getKey();
         Transaction transaction = new Transaction(transactionId, userId, type, category, amount, description, date);

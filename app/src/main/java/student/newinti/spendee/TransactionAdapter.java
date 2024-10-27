@@ -20,15 +20,14 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     private List<Transaction> transactionList;
     // retrieve and store the transaction record in transaction list
     public TransactionAdapter(List<Transaction> transactionList) {
-
-        Collections.sort(transactionList, new Comparator<Transaction>() {
-            @Override
-            public int compare(Transaction t1, Transaction t2) {
-                return t1.getDate().compareTo(t2.getDate()); // sort records in descending
-            }
-        });
         this.transactionList = transactionList;
     }
+
+    public void updateTransactions(List<Transaction> transactions) {
+        this.transactionList = transactions;
+        notifyDataSetChanged();
+    }
+
 
     @NonNull
     @Override

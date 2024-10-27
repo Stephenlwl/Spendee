@@ -56,6 +56,7 @@
     <string name="monthly_income">Monthly Income: </string>
     <string name="monthly_summary">Monthly Summary</string>
     <string name="remain_budget_caution">*Attention: Your remaining budget is nearing its limit! !</string>
+    <string name="budget_exceed_warning">*WARNING: Your Budget Have EXCEEDED !!!</string>
     <string name="expense">Expense</string>
     <string name="category">Category</string>
     <string name="money">RM0.00</string>
@@ -65,7 +66,7 @@
     <string name="set_budget_text">Set your monthly budget here!</string>
     <string name="records_history">Records History</string>
     <string name="set_low_budget_alert_button">Set Low-Budget Limit Warning</string>
-
+    <string name="view_monthly_record_button">View Monthly Records</string>
     <!--  Expense tracking validation message  -->
     <string name="select_record_type">Please select a Record Type</string>
     <string name="enter_amount">Please enter an amount</string>
@@ -83,4 +84,12 @@
     <string name="invalid_budget_amount_input">Please enter a valid budget alert amount</string>
     <string name="alert_budget_set_successful">Budget alert set successfully</string>
     <string name="alert_budget_set_failed">Failed to set budget alert</string>
+
+<!--    view monthly records-->
+    <string name="view_monthly_records_title">View Monthly Records History</string>
+    <string name="view_records_img">View records image</string>
+    <string name="select_month">Select by Month</string>
+    <string name="select_year">Select by Year</string>
+    <string name="total_spent_amount">Total Spent Amount: RM0.00</string>
+    <string name="apply_filter">Apply Filter</string>
 </resources>

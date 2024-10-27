@@ -43,9 +43,9 @@ import com.github.mikephil.charting.charts.PieChart;
 
 public class ExpenseTrackingActivity extends AppCompatActivity {
 
-    private Button createRecordButton, logoutButton, saveButton, setLowBudgetAlertButton;
+    private Button createRecordButton, logoutButton, saveButton, setLowBudgetAlertButton, viewMonthlyRecordsButton;
     private TextView username_text_view;
-    private TextView budgetRemainingText, warningText, monthlyIncome, monthlyExpenses, monthlyBudget;
+    private TextView budgetRemainingText, warningText, cautionText, monthlyIncome, monthlyExpenses, monthlyBudget;
     private RecyclerView transactionRecyclerView;
     private TransactionAdapter transactionAdapter;
     private List<Transaction> transactionsList = new ArrayList<>();
@@ -72,7 +72,8 @@ public class ExpenseTrackingActivity extends AppCompatActivity {
 
         // Initialize views
         budgetRemainingText = findViewById(R.id.budget_remaining_text);
-        warningText = findViewById(R.id.low_budget_alert_warning_text);
+        warningText = findViewById(R.id.budget_exceed_alert_warning_text);
+        cautionText = findViewById(R.id.low_budget_alert_warning_text);
         monthlyExpenses = findViewById(R.id.monthly_expenses_value);
         monthlyIncome = findViewById(R.id.monthly_income_value);
         monthlyBudget = findViewById(R.id.monthly_budget_value);
@@ -90,6 +91,7 @@ public class ExpenseTrackingActivity extends AppCompatActivity {
         saveButton = findViewById(R.id.set_budget_button);
         createRecordButton = findViewById(R.id.create_transaction_record_button);
         setLowBudgetAlertButton = findViewById(R.id.set_low_budget_alert_button);
+        viewMonthlyRecordsButton = findViewById(R.id.view_monthly_record_button);
         logoutButton = findViewById(R.id.logout_button);
 
         getTransactions(userId);
@@ -162,6 +164,15 @@ public class ExpenseTrackingActivity extends AppCompatActivity {
                 Intent intent = new Intent(ExpenseTrackingActivity.this, BudgetSettingActivity.class);
                 intent.putExtra("UserID", userId);
                 intent.putExtra("BudgetAmount", totalBudget);
+                startActivity(intent);
+            }
+        });
+
+        viewMonthlyRecordsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ExpenseTrackingActivity.this, ViewMonthlyActivity.class);
+                intent.putExtra("UserID", userId);
                 startActivity(intent);
             }
         });
@@ -330,10 +341,15 @@ public class ExpenseTrackingActivity extends AppCompatActivity {
                     budgetRemainingText.setText(String.format(Locale.getDefault(), getString(R.string.remaining_budget) + " %.2f", remainingBudget));
 
                     // Display warning text if remaining budget is below the alert threshold
-                    if (remainingBudget <= lowAmountBudgetAlert) {
+                    if (remainingBudget <= lowAmountBudgetAlert && remainingBudget > totalExpenses ) {
+                        cautionText.setVisibility(View.VISIBLE);
+                        warningText.setVisibility(View.GONE);
+                    } else if (remainingBudget <=0 ) {
                         warningText.setVisibility(View.VISIBLE);
+                        cautionText.setVisibility(View.GONE);
                     } else {
                         warningText.setVisibility(View.GONE);
+                        cautionText.setVisibility(View.GONE);
                     }
                 } else {
                     // Handle case where the snapshot does not exist

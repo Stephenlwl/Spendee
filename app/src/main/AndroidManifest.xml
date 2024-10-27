@@ -15,6 +15,12 @@
         android:theme="@style/Theme.Spendee"
         tools:targetApi="31">
         <activity
+            android:name=".MonthlyAdapter"
+            android:exported="false" />
+        <activity
+            android:name=".ViewMonthlyActivity"
+            android:exported="false" />
+        <activity
             android:name=".BudgetSettingActivity"
             android:exported="false" />
         <activity
