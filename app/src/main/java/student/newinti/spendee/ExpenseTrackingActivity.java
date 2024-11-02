@@ -352,8 +352,9 @@ public class ExpenseTrackingActivity extends AppCompatActivity {
                         cautionText.setVisibility(View.GONE);
                     }
                 } else {
+                    monthlyExpenses.setText(String.format(Locale.getDefault(), "RM " + "%.2f", totalExpenses));
+                    monthlyIncome.setText(String.format(Locale.getDefault(), "RM " + "%.2f", totalIncome));
                     budgetRemainingText.setText(getString(R.string.remaining_budget) + " 0.00");
-
                 }
             }
 
