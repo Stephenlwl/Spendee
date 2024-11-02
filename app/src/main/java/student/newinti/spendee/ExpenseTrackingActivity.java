@@ -351,6 +351,9 @@ public class ExpenseTrackingActivity extends AppCompatActivity {
                         warningText.setVisibility(View.GONE);
                         cautionText.setVisibility(View.GONE);
                     }
+                } else {
+                    budgetRemainingText.setText(getString(R.string.remaining_budget) + " 0.00");
+
                 }
             }
 
@@ -378,7 +381,11 @@ public class ExpenseTrackingActivity extends AppCompatActivity {
         }
 
         pieChart.setDrawEntryLabels(false); // disable the category label on the chart
-        pieChart.getDescription().setEnabled(false); // Disable description label
+        pieChart.getDescription().setEnabled(false);
+
+        // get the budget amount and set it as a separate entry
+        double budgetAmount = totalBudget - totalExpenses;
+        entries.add(new PieEntry((float) budgetAmount, "Budget Remain"));
 
         PieDataSet dataSet = new PieDataSet(entries, "Expenses by Category");
         List<Integer> colors = new ArrayList<>();
@@ -389,10 +396,6 @@ public class ExpenseTrackingActivity extends AppCompatActivity {
                 colors.add(pastelColors[i % pastelColors.length]); // Cycle through pastel colors
             }
         }
-
-        // get the budget amount and set it as a separate entry
-        double budgetAmount = totalBudget - totalExpenses;
-        entries.add(new PieEntry((float) budgetAmount, "Budget Remain"));
 
         dataSet.setColors(colors);
         PieData data = new PieData(dataSet);
