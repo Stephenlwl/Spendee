@@ -133,7 +133,7 @@ public class ViewMonthlyActivity extends AppCompatActivity {
                 Log.d("TotalSpent", "Total Spent: RM" + totalSpent);
                 Log.d("Transactions", "Number of transactions: " + transactions.size());
 
-                totalSpentTextView.setText(String.format("Total Spent: RM%.2f", totalSpent));
+                totalSpentTextView.setText(String.format("Total Spent Amount: RM%.2f", totalSpent));
                 transactionAdapter.updateTransactions(transactions);
             }
 

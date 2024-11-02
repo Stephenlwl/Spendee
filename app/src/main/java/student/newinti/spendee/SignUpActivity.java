@@ -63,7 +63,6 @@ public class SignUpActivity extends AppCompatActivity {
             String password = password_input.getText().toString().trim();
             String confirm_password = confirm_password_input.getText().toString().trim();
 
-            // Check if the passwords match
             // Check if the passwords match and meet the requirements
             if (!password.equals(confirm_password)) {
                 Toast.makeText(SignUpActivity.this, R.string.confirm_password_incorrect_toast, Toast.LENGTH_SHORT).show();

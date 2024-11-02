@@ -381,10 +381,7 @@ public class ExpenseTrackingActivity extends AppCompatActivity {
         }
 
         pieChart.setDrawEntryLabels(false); // disable the category label on the chart
-
-        // get the budget amount and set it as a separate entry
-        double budgetAmount = totalBudget - totalExpenses;
-        entries.add(new PieEntry((float) budgetAmount, "Budget Remain"));
+        pieChart.getDescription().setEnabled(false); // Disable description label
 
         PieDataSet dataSet = new PieDataSet(entries, "Expenses by Category");
         List<Integer> colors = new ArrayList<>();
@@ -395,6 +392,10 @@ public class ExpenseTrackingActivity extends AppCompatActivity {
                 colors.add(pastelColors[i % pastelColors.length]); // Cycle through pastel colors
             }
         }
+
+        // get the budget amount and set it as a separate entry
+        double budgetAmount = totalBudget - totalExpenses;
+        entries.add(new PieEntry((float) budgetAmount, "Budget Remain"));
 
         dataSet.setColors(colors);
         PieData data = new PieData(dataSet);
