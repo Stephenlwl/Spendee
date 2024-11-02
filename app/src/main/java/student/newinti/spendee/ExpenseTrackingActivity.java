@@ -351,9 +351,6 @@ public class ExpenseTrackingActivity extends AppCompatActivity {
                         warningText.setVisibility(View.GONE);
                         cautionText.setVisibility(View.GONE);
                     }
-                } else {
-                    // Handle case where the snapshot does not exist
-                    Toast.makeText(ExpenseTrackingActivity.this, "Budget data not found", Toast.LENGTH_SHORT).show();
                 }
             }
 

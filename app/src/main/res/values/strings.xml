@@ -50,7 +50,7 @@
     <string name="invalid_user_id">Invalid user id</string>
     <string name="transaction_success">Transaction Record added successfully!</string>
     <string name="transaction_fail">Failed to add transaction.</string>
-    <string name="remaining_budget">Remaining Budget: RM</string>
+    <string name="remaining_budget">Remaining Budget: RM0.00</string>
     <string name="monthly_budget">Monthly Budget: </string>
     <string name="monthly_expenses">Monthly Expenses: </string>
     <string name="monthly_income">Monthly Income: </string>
