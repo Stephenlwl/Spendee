@@ -341,7 +341,7 @@ public class ExpenseTrackingActivity extends AppCompatActivity {
                     budgetRemainingText.setText(String.format(Locale.getDefault(), getString(R.string.remaining_budget) + " %.2f", remainingBudget));
 
                     // Display warning text if remaining budget is below the alert threshold
-                    if (remainingBudget <= lowAmountBudgetAlert && remainingBudget > totalExpenses ) {
+                    if (remainingBudget <= lowAmountBudgetAlert && remainingBudget > 0 ) {
                         cautionText.setVisibility(View.VISIBLE);
                         warningText.setVisibility(View.GONE);
                     } else if (remainingBudget <=0 ) {
